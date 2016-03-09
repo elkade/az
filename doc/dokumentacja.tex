@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{verbatim}
+\usepackage[MeX]{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\author{Piotr Izert, Łukasz Dragan}
+\title{Algorytmy Zaawansowane - POLE}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Przedstawienie problemu}
+
+\subsection{Treść zadania}
+\paragraph{}
+\textit{
+Zaprojektować i zaimplementować algorytm, który w czasie liniowym względem n oblicza pole n-wierzchołkowego prostego wielokąta oraz sprawdza, czy podany punkt leży wewnątrz tego wielokąta. Program powinien zawierać procedurę sprawdzającą, czy dany wielokąt jest prosty.
+}
+\subsection{}
+
+\section{Opis rozwiązania}
+\section{Analiza poprawności}
+\section{Opis wejścia/wyjścia}
+\subsection{Wejście}
+\paragraph{}Program domyślnie jako wejście przyjmuje zawartość pliku ,,in.txt'', który powinien zawierać w kolejnych liniach:
+\begin{enumerate}
+\item Dane postaci \(x_1\ y_1\ ...\ x_n\ y_n\) gdzie \((x_i,y_i)\ dla\ i=1,2,...,n\) to współrzędne kolejnych punktów a \(n\) to liczba wierzchołków wielokąta.
+\item Dane postaci \(x\ y\) będące współrzędnymi punktu, którego zawieranie w wielokącie na zostać sprawdzone.
+\end{enumerate}
+\paragraph{Przykładowe wejście} \mbox{}\\
+\texttt{
+344,8 91,2 68,8 121,6 352,8 218,4 448 114,4\\
+288,8 136
+}
+
+\subsection{Wyjście}
+\paragraph{}Rezultat działania programu zapisywany jest w pliku ,,out.txt'' w postaci \(S\ Ans\) gdzie \(S\) to pole powierzchni wielokąta a \(Ans\in\{"TAK","NIE"\}\) to odpowiedź na pytanie, czy dany punkt jest zawarty w wielokącie. W przypadku, gdy dany wielokąt nie jest prosty rezultatem działania programu jest \texttt{NOT SIMPLE}. Jeżeli dane podane na wejściu są niepoprawne, program zapisze do pliku \texttt{BAD INPUT}.
+
+\paragraph{Przykładowe wyjście} \mbox{}\\
+\texttt{1243,33 TAK}
+
+\end{document}
