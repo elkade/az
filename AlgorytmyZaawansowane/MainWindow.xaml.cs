@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
@@ -16,10 +18,22 @@ namespace AlgorytmyZaawansowane
     {
         Polygon polygon;
         Point point;
-
+        private Shape _currentShape = Shape.Polygon;
+        public Shape CurrentShape {
+            get
+            {
+                return _currentShape;
+            }
+            set
+            {
+                isDrawingStarted = false;
+                _currentShape = value;
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
         }
         bool isDrawingStarted = false;
         Point startPoint;
@@ -34,31 +48,59 @@ namespace AlgorytmyZaawansowane
         {
             if (e.LeftButton != MouseButtonState.Pressed)
                 return;
-            if (!isDrawingStarted)
+            switch (CurrentShape)
             {
-                if (e.ClickCount == 1)
-                {
-                    isDrawingStarted = true;
-                    firstPoint = e.GetPosition(this);
-                    startPoint = firstPoint;
-                    endPoint = firstPoint;
-                    polygon = new Polygon { firstPoint };
-                    CreateNewLine();
-                }
+                case Shape.Polygon:
+                    if (!isDrawingStarted)
+                    {
+                        if (e.ClickCount == 1)
+                        {
+                            isDrawingStarted = true;
+                            firstPoint = e.GetPosition(this);
+                            startPoint = firstPoint;
+                            endPoint = firstPoint;
+                            polygon = new Polygon { firstPoint };
+                            CreateNewLine();
+                        }
+                    }
+                    else
+                    {
+                        if (e.ClickCount == 1)
+                            endPoint = e.GetPosition(this);
+                        else
+                        {
+                            isDrawingStarted = false;
+                            startPoint = endPoint;
+                            endPoint = firstPoint;
+                            Task.Factory.StartNew(() => { MessageBox.Show(polygon.ToString()); });
+                        }
+                        UpdateCurrentLine();
+                    }
+                    break;
+                case Shape.Point:
+                    CreateNewPoint(e.GetPosition(this));
+
+                    break;
             }
-            else
-            {
-                if (e.ClickCount == 1)
-                    endPoint = e.GetPosition(this);
-                else
-                {
-                    isDrawingStarted = false;
-                    startPoint = endPoint;
-                    endPoint = firstPoint;
-                    Task.Factory.StartNew(() => { MessageBox.Show(polygon.ToString()); });
-                }
-                UpdateCurrentLine();
-            }
+
+        }
+        private void CreateNewPoint(Point p)
+        {
+            point = p;
+            double width = 5, height = 5;
+            Ellipse e = CreateEllipse(width, height, p.X, p.Y);
+            paintSurface.Children.Add(e);
+            Canvas.SetLeft(e, p.X - (width / 2));
+            Canvas.SetTop(e, p.Y - (height / 2));
+        }
+        Ellipse CreateEllipse(double width, double height, double desiredCenterX, double desiredCenterY)
+        {
+            Ellipse ellipse = new Ellipse { Width = width, Height = height };
+            double left = desiredCenterX - (width / 2);
+            double top = desiredCenterY - (height / 2);
+
+            ellipse.Margin = new Thickness(left, top, 0, 0);
+            return ellipse;
         }
 
         private void CreateNewLine()
@@ -86,13 +128,6 @@ namespace AlgorytmyZaawansowane
                 }
             }
         }
-
-        private void UpdateCurrentLine()
-        {
-            currentLine.X2 = endPoint.X;
-            currentLine.Y2 = endPoint.Y;
-        }
-
         private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (isDrawingStarted)
@@ -104,9 +139,16 @@ namespace AlgorytmyZaawansowane
             }
         }
 
+        private void UpdateCurrentLine()
+        {
+            currentLine.X2 = endPoint.X;
+            currentLine.Y2 = endPoint.Y;
+        }
+
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             paintSurface.Children.Clear();
+            isDrawingStarted = false;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -143,8 +185,48 @@ namespace AlgorytmyZaawansowane
         {
             using (var file = new StreamWriter(OutputFileName))
             {
-                file.WriteLine("");
+                try {
+                    if (polygon.IsSimple())
+                    {
+                        string area = polygon.GetArea().ToString();
+                        bool isInside = false;// = polygon.IsPointInside(point);
+                        file.WriteLine(area + " " + (isInside ? "TAK" : "NIE"));
+                    }
+                    else file.WriteLine("NOT SIMPLE");
+                }
+                catch(Exception ex)
+                {
+                    file.WriteLine("BAD DATA");
+                }
             }
+        }
+
+        private void CalculateButton_Click(object sender, RoutedEventArgs e)
+        {
+            WriteOutput();
+        }
+    }
+    public enum Shape { Polygon, Point }
+
+    public class EnumBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            string parameterString = parameter as string;
+            if (parameterString == null)
+                return DependencyProperty.UnsetValue;
+
+            if (Enum.IsDefined(value.GetType(), value) == false)
+                return DependencyProperty.UnsetValue;
+
+            object parameterValue = Enum.Parse(value.GetType(), parameterString);
+
+            return parameterValue.Equals(value);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value.Equals(true) ? parameter : Binding.DoNothing;
         }
     }
 }

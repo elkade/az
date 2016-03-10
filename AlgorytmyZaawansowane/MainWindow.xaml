@@ -4,21 +4,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AlgorytmyZaawansowane"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Background="Lavender"
         Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="75" />
         </Grid.ColumnDefinitions>
-        <Canvas Grid.Column="0" Name="paintSurface" MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp">
+        <Grid.Resources>
+            <local:EnumBooleanConverter x:Key="enumBooleanConverter" />
+        </Grid.Resources>
+        <Canvas Grid.Column="0" Name="paintSurface" MouseDown="Canvas_MouseDown"
+                MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp">
             <Canvas.Background>
-                <SolidColorBrush Color="White" Opacity="0"/>
+                <SolidColorBrush Color="White" Opacity="1"/>
             </Canvas.Background>
         </Canvas>
         <StackPanel Grid.Column="1">
             <Button Name="ClearButton" Click="ClearButton_Click" Content="Clear"/>
+            <Button Name="CalculateButton" Click="CalculateButton_Click"  Content="Calculate"/>
+            <RadioButton GroupName="A" IsChecked="{Binding Path=CurrentShape, Mode=TwoWay, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Polygon}">Polygon</RadioButton>
+            <RadioButton GroupName="A" IsChecked="{Binding Path=CurrentShape, Mode=TwoWay, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Point}">Point</RadioButton>
         </StackPanel>
+
     </Grid>
 
 </Window>
