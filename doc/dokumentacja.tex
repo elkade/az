@@ -3,6 +3,7 @@
 \usepackage[MeX]{polski}
 \usepackage[utf8]{inputenc}
 \usepackage{mathtools}
+\newcommand{\tab}[1]{\hspace{.05\textwidth}\rlap{#1}}
 \author{Piotr Izert, Łukasz Dragan}
 \title{Algorytmy Zaawansowane - POLE}
 
@@ -22,7 +23,27 @@ Zaprojektować i zaimplementować algorytm, który w czasie liniowym względem n
 \subsection{}
 
 \section{Opis rozwiązania}
+\subsection{Pole wielokąta}
+\paragraph{}W celu obliczenia pola powierzchni wielokąta prostego stosujemy algorytm wykorzystujący tzw. wzór trapezowy Gaussa \(S=\frac{1}{2}\sum\limits_{i=1}^n (x_i+x_{i+1})*(y_{i+1}-y_i)\), gdzie \(S\) to pole powierzchni wielokąta, \(x_i, y_i\ dla\ i=1...n\) to współrzędne kolejnych wierzchołków wielokąta, a \(n\) to liczba wierzchołków wielokąta. Zakładamy, że \(x_{n+1} = x_1\) oraz \(y_{n+1} = y_1\).
+\paragraph{Algorytm} %\mbox{}\\
+%\(A=(x_1, y_1),..., (x_n, y_n), (x_1,y_1)\) - ciąg wierzchołków wielokąta z dodanym na koniec pierwszym wierzchołkiem.
+\begin{enumerate}
+\item \(area = 0\)
+\item \(j=n\)
+\item dla \(i=1\) do \(n\) wykonaj: %dla każdego elementu \((x_i,y_i)\) z \(A\) wykonaj:
+\item \tab{\(area = area + (x_j+x_i)*(y_j-y_i)\)}
+\item \tab{\(j=i\)}
+\item \(area = area/2\)
+\item RETURN \(area\)
+\end{enumerate}
+\subsection{Zawieranie punktu w wielokącie}
+\subsection{Czy wielokąt jest prosty}
 \section{Analiza poprawności}
+\subsection{Pole wielokąta}
+\paragraph{Poprawność} \mbox{}\\
+W pierwszej iteracji pętli z kroku 3. \(area = (x_n+x_1)*(y_n-y_1) (=(x_n+x_{n+1})*(y_n-y_{n+1}))\). W kolejnych iteracjach \(j\) jest zawsze o \(1\) mniejsze od \(i\), stąd do \(area\) dodawana jest wartość \((x_j+x_{j+1})*(y_j-y_{j+1})\ dla\ j = 1...n-1\). Stąd ostatecznie \(area = (x_n+x_{n+1})*(y_n-y_{n+1}) + (x_1+x_2)*(y_1-y_2) + ... + (x_{n-1}+x_n)*(y_{n-1}-y_{n}) = \sum\limits_{i=1}^n (x_i+x_{i+1})*(y_{i+1}-y_i)\). Po podzieleniu \(area\) przez \(2\) otrzymujemy wzór Gaussa na pole powierzchni wielokąta.
+\paragraph{Złożoność czasowa} \mbox{}\\
+Algorytm działa w czasie \(O(n)\), gdyż główna pętla algorytmu wykonuje dokładnie \(n\) kroków.
 \section{Opis wejścia/wyjścia}
 \subsection{Wejście}
 \paragraph{}Program domyślnie jako wejście przyjmuje zawartość pliku ,,in.txt'', który powinien zawierać w kolejnych liniach:
