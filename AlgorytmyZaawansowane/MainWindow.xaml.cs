@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace AlgorytmyZaawansowane
@@ -65,42 +66,26 @@ namespace AlgorytmyZaawansowane
                     }
                     else
                     {
-                        if (e.ClickCount == 1)
+                        if (e.ClickCount == 1) {
                             endPoint = e.GetPosition(this);
+                            UpdateCurrentLine();
+                        }
                         else
                         {
                             isDrawingStarted = false;
                             startPoint = endPoint;
                             endPoint = firstPoint;
-                            Task.Factory.StartNew(() => { MessageBox.Show(polygon.ToString()); });
+                            DrawPolygon(polygon);
                         }
-                        UpdateCurrentLine();
                     }
                     break;
                 case Shape.Point:
-                    CreateNewPoint(e.GetPosition(this));
 
+                    point = e.GetPosition(this);
+                    DrawPoint(point);
                     break;
             }
 
-        }
-        private void CreateNewPoint(Point p)
-        {
-            point = p;
-            double width = 5, height = 5;
-            Ellipse e = CreateEllipse(width, height, p.X, p.Y);
-            paintSurface.Children.Add(e);
-            Canvas.SetLeft(e, p.X - (width / 2));
-            Canvas.SetTop(e, p.Y - (height / 2));
-        }
-        Ellipse CreateEllipse(double width, double height, double desiredCenterX, double desiredCenterY)
-        {
-            Ellipse ellipse = new Ellipse { Width = width, Height = height };
-            double left = desiredCenterX - (width / 2);
-            double top = desiredCenterY - (height / 2);
-
-            ellipse.Margin = new Thickness(left, top, 0, 0);
-            return ellipse;
         }
 
         private void CreateNewLine()
@@ -153,33 +138,83 @@ namespace AlgorytmyZaawansowane
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ReadInput();
+            //ReadInput();
             //DrawData();
         }
+        private void DrawPolygon(IEnumerable<Point> vertices)
+        {
+            var lines = paintSurface.Children.OfType<Line>().ToList();
+            foreach (var l in lines) paintSurface.Children.Remove(l);
 
+            var polygons = paintSurface.Children.OfType<System.Windows.Shapes.Polygon>().ToList();
+            foreach (var pp in polygons) paintSurface.Children.Remove(pp);
+
+            System.Windows.Shapes.Polygon p = new System.Windows.Shapes.Polygon();
+            p.Stroke = Brushes.Black;
+            p.Fill = Brushes.LightBlue;
+            p.StrokeThickness = 1;
+            p.HorizontalAlignment = HorizontalAlignment.Left;
+            p.VerticalAlignment = VerticalAlignment.Center;
+            p.Points = new PointCollection(vertices);
+            Panel.SetZIndex(p, -1);
+            paintSurface.Children.Add(p);
+        }
+        private void DrawPoint(Point point)
+        {
+            var ellipses = paintSurface.Children.OfType<Ellipse>().ToList();
+            foreach (var e in ellipses) paintSurface.Children.Remove(e);
+            Ellipse ellipse = new Ellipse();
+            ellipse.Height = 10;
+            ellipse.Width = 10;
+            SolidColorBrush blueBrush = new SolidColorBrush();
+            blueBrush.Color = Colors.Red;
+            SolidColorBrush blackBrush = new SolidColorBrush();
+            blackBrush.Color = Colors.Black;
+            ellipse.StrokeThickness = 2;
+            ellipse.Stroke = blackBrush;
+            ellipse.Fill = blueBrush;
+
+            double left = point.X - (ellipse.Width / 2);
+            double top = point.Y - (ellipse.Height / 2);
+
+            ellipse.Margin = new Thickness(left, top, 0, 0);
+
+            paintSurface.Children.Add(ellipse);
+        }
         private void DrawData()
         {
-            throw new NotImplementedException();
+            DrawPolygon(polygon);
+            DrawPoint(point);
         }
 
         private void ReadInput()
         {
-            string[] line1, line2;
-            using (var file = new System.IO.StreamReader(InputFileName))
-            {
-                line1 = file.ReadLine().Split(' ');
-                line2 = file.ReadLine().Split(' ');
+            try {
+                string[] line1, line2;
+                using (var file = new System.IO.StreamReader(InputFileName))
+                {
+                    line1 = file.ReadLine().Split(' ');
+                    line2 = file.ReadLine().Split(' ');
+                }
+                var vertices = new List<Point>();
+
+                for (int i = 0; i < line1.Length; i += 2)
+                    vertices.Add(new Point(double.Parse(line1[i]), double.Parse(line1[i + 1])));
+                polygon = new Polygon();
+                polygon.AddRange(vertices);
+
+                double x = double.Parse(line2[0]);
+                double y = double.Parse(line2[1]);
+                point = new Point(x, y);
             }
-            var vertices = new List<Point>();
-
-            for (int i = 0; i < line1.Length; i += 2)
-                vertices.Add(new Point(double.Parse(line1[i]), double.Parse(line1[i + 1])));
-            polygon = new Polygon();
-            polygon.AddRange(vertices);
-
-            double x = double.Parse(line2[0]);
-            double y = double.Parse(line2[1]);
-            point = new Point(x, y);
+            catch(Exception ex)
+            {
+                using (var file = new StreamWriter(OutputFileName))
+                {
+                    file.WriteLine("BAD DATA");
+                }
+                MessageBox.Show("Error occured while reading input.");
+            }
         }
         private void WriteOutput()
         {
@@ -203,7 +238,16 @@ namespace AlgorytmyZaawansowane
 
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
-            WriteOutput();
+            Task.Factory.StartNew(() => {
+                WriteOutput();
+                MessageBox.Show(polygon.ToString());
+            });
+        }
+        private void ReadButton_Click(object sender, RoutedEventArgs e)
+        {
+            ReadInput();
+            //paintSurface.Children.Clear();
+            DrawData();
         }
     }
     public enum Shape { Polygon, Point }

@@ -22,6 +22,7 @@
         </Canvas>
         <StackPanel Grid.Column="1">
             <Button Name="ClearButton" Click="ClearButton_Click" Content="Clear"/>
+            <Button Name="ReadButton" Click="ReadButton_Click" Content="Read input"/>
             <Button Name="CalculateButton" Click="CalculateButton_Click"  Content="Calculate"/>
             <RadioButton GroupName="A" IsChecked="{Binding Path=CurrentShape, Mode=TwoWay, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Polygon}">Polygon</RadioButton>
             <RadioButton GroupName="A" IsChecked="{Binding Path=CurrentShape, Mode=TwoWay, Converter={StaticResource enumBooleanConverter}, ConverterParameter=Point}">Point</RadioButton>
