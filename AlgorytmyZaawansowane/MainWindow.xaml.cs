@@ -29,8 +29,8 @@ namespace AlgorytmyZaawansowane
         Point endPoint;
         Line currentLine;
 
-        private Shape _currentShape = Shape.Polygon;
-        public Shape CurrentShape
+        private SelectedShape _currentShape = SelectedShape.Polygon;
+        public SelectedShape CurrentShape
         {
             get
             {
@@ -61,7 +61,7 @@ namespace AlgorytmyZaawansowane
                 return;
             switch (CurrentShape)
             {
-                case Shape.Polygon:
+                case SelectedShape.Polygon:
                     if (!isDrawingStarted)
                     {
                         if (e.ClickCount == 1)
@@ -89,8 +89,7 @@ namespace AlgorytmyZaawansowane
                         }
                     }
                     break;
-                case Shape.Point:
-
+                case SelectedShape.Point:
                     point = e.GetPosition(this);
                     DrawPoint(point);
                     break;
@@ -232,7 +231,7 @@ namespace AlgorytmyZaawansowane
                     if (polygon.IsSimple())
                     {
                         string area = polygon.GetArea().ToString();
-                        bool isInside = false;// = polygon.IsPointInside(point);
+                        bool isInside = polygon.IsPointInside(point);
                         file.WriteLine(area + " " + (isInside ? "TAK" : "NIE"));
                     }
                     else file.WriteLine("NOT SIMPLE");
@@ -254,7 +253,11 @@ namespace AlgorytmyZaawansowane
 
             Task.Factory.StartNew(() => {
                 WriteOutput();
-                MessageBox.Show(polygon.ToString());
+                string pointIn = "";
+                if (point != null) {
+                    pointIn = ", point " + point.ToString() + (polygon.IsPointInside(point) ? " inside" : " outside");
+                }
+                MessageBox.Show(polygon.ToString() + pointIn);
             });
         }
 
@@ -267,7 +270,7 @@ namespace AlgorytmyZaawansowane
         }
     }
 
-    public enum Shape { Polygon, Point }
+    public enum SelectedShape { Polygon, Point }
 
     public class EnumBooleanConverter : IValueConverter
     {

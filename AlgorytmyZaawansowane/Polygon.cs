@@ -24,19 +24,21 @@ namespace AlgorytmyZaawansowane
             }
         }
 
-        //public bool IsPointInside(Point point)
-        //{
-        //    bool isInside = false;
-        //    for (int i = 0, j = Count - 1; i < Count; j = i++)
-        //    {
-        //        if (((this[i].Y > point.Y) != (this[j].Y > point.Y)) &&
-        //        (point.X < (Points[j].X - Points[i].X) * (point.Y - Points[i].Y) / (Points[j].Y - Points[i].Y) + Points[i].X))
-        //        {
-        //            isInside = !isInside;
-        //        }
-        //    }
-        //    return isInside;
-        //}
+        public bool IsPointInside(Point point)
+        {
+            bool isInside = false;
+            for (int i = 0, j = Count - 1; i < Count; j = i++)
+            {
+                // TODO: vertex on ray
+
+                if (((this[i].Y > point.Y) != (this[j].Y > point.Y)) &&
+                ( point.X < this[i].X + (this[j].X - this[i].X) * (this[i].Y - point.Y) / (this[i].Y - this[j].Y)) )
+                {
+                    isInside = !isInside;
+                }
+            }
+            return isInside;
+        }
 
         public bool IsSimple()
         {
