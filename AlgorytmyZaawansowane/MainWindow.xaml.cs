@@ -17,10 +17,21 @@ namespace AlgorytmyZaawansowane
     /// </summary>
     public partial class MainWindow : Window
     {
+        public const string InputFileName = "in.txt";
+        public const string OutputFileName = "out.txt";
+
         Polygon polygon;
         Point point;
-        private Shape _currentShape = Shape.Polygon;
-        public Shape CurrentShape {
+
+        bool isDrawingStarted = false;
+        Point startPoint;
+        Point firstPoint;
+        Point endPoint;
+        Line currentLine;
+
+        private SelectedShape _currentShape = SelectedShape.Polygon;
+        public SelectedShape CurrentShape
+        {
             get
             {
                 return _currentShape;
@@ -34,19 +45,18 @@ namespace AlgorytmyZaawansowane
                 _currentShape = value;
             }
         }
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
         }
-        bool isDrawingStarted = false;
-        Point startPoint;
-        Point firstPoint;
-        Point endPoint;
-        Line currentLine;
 
-        public const string InputFileName = "in.txt";
-        public const string OutputFileName = "out.txt";
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //ReadInput();
+            //DrawData();
+        }
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -54,7 +64,7 @@ namespace AlgorytmyZaawansowane
                 return;
             switch (CurrentShape)
             {
-                case Shape.Polygon:
+                case SelectedShape.Polygon:
                     if (!isDrawingStarted)
                     {
                         if (e.ClickCount == 1)
@@ -82,13 +92,34 @@ namespace AlgorytmyZaawansowane
                         }
                     }
                     break;
-                case Shape.Point:
-
+                case SelectedShape.Point:
                     point = e.GetPosition(this);
                     DrawPoint(point);
                     break;
             }
+        }
 
+        private void Canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (isDrawingStarted)
+                {
+                    endPoint = e.GetPosition(this);
+                    UpdateCurrentLine();
+                }
+            }
+        }
+
+        private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (isDrawingStarted)
+            {
+                startPoint = endPoint;
+                CreateNewLine();
+                if (endPoint != polygon[polygon.Count - 1])
+                    polygon.Add(endPoint);
+            }
         }
 
         private void CreateNewLine()
@@ -105,28 +136,6 @@ namespace AlgorytmyZaawansowane
             paintSurface.Children.Add(currentLine);
         }
 
-        private void Canvas_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (isDrawingStarted)
-                {
-                    endPoint = e.GetPosition(this);
-                    UpdateCurrentLine();
-                }
-            }
-        }
-        private void Canvas_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (isDrawingStarted)
-            {
-                startPoint = endPoint;
-                CreateNewLine();
-                if (endPoint != polygon[polygon.Count - 1])
-                    polygon.Add(endPoint);
-            }
-        }
-
         private void UpdateCurrentLine()
         {
             currentLine.X2 = endPoint.X;
@@ -139,11 +148,6 @@ namespace AlgorytmyZaawansowane
             isDrawingStarted = false;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            //ReadInput();
-            //DrawData();
-        }
         private void DrawPolygon(IEnumerable<Point> vertices)
         {
             var lines = paintSurface.Children.OfType<Line>().ToList();
@@ -162,6 +166,7 @@ namespace AlgorytmyZaawansowane
             Panel.SetZIndex(p, -1);
             paintSurface.Children.Add(p);
         }
+
         private void DrawPoint(Point point)
         {
             var ellipses = paintSurface.Children.OfType<Ellipse>().ToList();
@@ -184,6 +189,7 @@ namespace AlgorytmyZaawansowane
 
             paintSurface.Children.Add(ellipse);
         }
+
         private void DrawData()
         {
             DrawPolygon(polygon);
@@ -210,7 +216,7 @@ namespace AlgorytmyZaawansowane
                 double y = double.Parse(line2[1]);
                 point = new Point(x, y);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 using (var file = new StreamWriter(OutputFileName))
                 {
@@ -219,6 +225,7 @@ namespace AlgorytmyZaawansowane
                 MessageBox.Show("Error occured while reading input.");
             }
         }
+
         private void WriteOutput()
         {
             using (var file = new StreamWriter(OutputFileName))
@@ -227,12 +234,12 @@ namespace AlgorytmyZaawansowane
                     if (polygon.IsSimple())
                     {
                         string area = polygon.GetArea().ToString();
-                        bool isInside = false;// = polygon.IsPointInside(point);
+                        bool isInside = polygon.IsPointInside(point);
                         file.WriteLine(area + " " + (isInside ? "TAK" : "NIE"));
                     }
                     else file.WriteLine("NOT SIMPLE");
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
                     file.WriteLine("BAD DATA");
                 }
@@ -241,19 +248,32 @@ namespace AlgorytmyZaawansowane
 
         private void CalculateButton_Click(object sender, RoutedEventArgs e)
         {
+            if (polygon == null)
+            {
+                MessageBox.Show("No polygon read");
+                return;
+            }
+
             Task.Factory.StartNew(() => {
                 WriteOutput();
-                MessageBox.Show(polygon.ToString());
+                string pointIn = "";
+                if (point != null) {
+                    pointIn = ", point " + point.ToString() + (polygon.IsPointInside(point) ? " inside" : " outside");
+                }
+                MessageBox.Show(polygon.ToString() + pointIn);
             });
         }
+
         private void ReadButton_Click(object sender, RoutedEventArgs e)
         {
             ReadInput();
             //paintSurface.Children.Clear();
-            DrawData();
+            if(polygon != null)
+                DrawData();
         }
     }
-    public enum Shape { Polygon, Point }
+
+    public enum SelectedShape { Polygon, Point }
 
     public class EnumBooleanConverter : IValueConverter
     {
