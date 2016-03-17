@@ -7,9 +7,14 @@ using System.Windows;
 
 namespace AlgorytmyZaawansowane
 {
-    class Polygon : List<Point>
+    public class Polygon : List<Point>
     {
         public Polygon()
+        {
+
+        }
+
+        public Polygon(IEnumerable<Point> collection) : base(collection)
         {
 
         }
