@@ -28,6 +28,9 @@ namespace AlgorytmyZaawansowane
             set
             {
                 isDrawingStarted = false;
+                var lines = paintSurface.Children.OfType<Line>().ToList();
+                foreach (var l in lines) paintSurface.Children.Remove(l);
+
                 _currentShape = value;
             }
         }
