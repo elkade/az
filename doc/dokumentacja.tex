@@ -91,9 +91,15 @@ Przykład zasady obliczania punktu przecięcia został przedstawiony na rysunku 
 \end{figure}
 
 \subsection{Sprawdzanie, czy wielokąt jest prosty}
-
-
-
+\paragraph{}Algorytmy prezentowane w niniejszym mają zastosowanie jedynie, gdy dany wielokąt jest prosty.
+\paragraph{Wielokąt prosty:} wielokąt, którego boki tworzą zamkniętą łamaną, a dwa jego boki mają punkt wspólny tylko, gdy są sąsiadami. (Wikipedia)
+\paragraph{Algorytm}\mbox{}\\
+W celu sprawdzenia, czy wielokąt jest prosty dokonujemy sprawdzenia:
+\begin{enumerate}
+\item czy istnieje przecięcie pomiędzy dowolnymi dwiema krawędziami $e_i$ i $e_j$ dla $|i-j|>1,\ i,j=1,...,n+1$ danego wielokąta. Przyjmujemy, iż $e_1 = e_{n+1},\ n$ - liczba krawędzi wielokąta. 
+\item W przypadku $|i-j|=1$ (kolejne krawędzie wielokąta): czy jedna z krawędzi zawiera się w drugiej.
+\end{enumerate}
+Algorytm działa na zasadzie sprawdzenia każdej możliwej pary krawędzi $e_i,\ e_j\ dla\ j>i, i,j=1,...,n+1$. Jeżeli dla danej pary spełniony jest dowolny z warunków (1,2), wielokąt nie jest prosty.
 \section{Analiza poprawności}
 
 \subsection{Pole wielokąta}
@@ -111,7 +117,8 @@ Algorytm działa w czasie \(O(n)\), gdyż główna pętla algorytmu wykonuje dok
 
 \subsection{Sprawdzanie, czy wielokąt jest prosty}
 
-
+\paragraph{Złożoność czasowa} \mbox{}\\
+Algorytm działa w czasie $O(n^2)$, gdyż dla krawędzi i wykonuje sprawdzenie warunków $n-i$ razy. Liczba wywołań funkcji sprawdzenia warunków $S = \sum\limits_{i=1}^n (n-i) = \frac{n(n-1)}{2}$
 
 \section{Opis wejścia/wyjścia}
 

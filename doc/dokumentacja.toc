@@ -1,21 +1,29 @@
 \contentsline {section}{\numberline {1}Przedstawienie problemu}{3}
 \contentsline {subsection}{\numberline {1.1}Tre\IeC {\'s}\IeC {\'c} zadania}{3}
 \contentsline {paragraph}{}{3}
-\contentsline {subsection}{\numberline {1.2}}{3}
 \contentsline {section}{\numberline {2}Opis rozwi\IeC {\k a}zania}{3}
 \contentsline {subsection}{\numberline {2.1}Pole wielok\IeC {\k a}ta}{3}
 \contentsline {paragraph}{}{3}
 \contentsline {paragraph}{Algorytm}{3}
 \contentsline {subsection}{\numberline {2.2}Zawieranie punktu w wielok\IeC {\k a}cie}{3}
-\contentsline {subsection}{\numberline {2.3}Czy wielok\IeC {\k a}t jest prosty}{3}
-\contentsline {section}{\numberline {3}Analiza poprawno\IeC {\'s}ci}{3}
-\contentsline {subsection}{\numberline {3.1}Pole wielok\IeC {\k a}ta}{3}
-\contentsline {paragraph}{Poprawno\IeC {\'s}\IeC {\'c}}{3}
-\contentsline {paragraph}{Z\IeC {\l }o\IeC {\.z}ono\IeC {\'s}\IeC {\'c} czasowa}{4}
-\contentsline {section}{\numberline {4}Opis wej\IeC {\'s}cia/wyj\IeC {\'s}cia}{4}
-\contentsline {subsection}{\numberline {4.1}Wej\IeC {\'s}cie}{4}
-\contentsline {paragraph}{}{4}
-\contentsline {paragraph}{Przyk\IeC {\l }adowe wej\IeC {\'s}cie}{4}
-\contentsline {subsection}{\numberline {4.2}Wyj\IeC {\'s}cie}{4}
-\contentsline {paragraph}{}{4}
-\contentsline {paragraph}{Przyk\IeC {\l }adowe wyj\IeC {\'s}cie}{4}
+\contentsline {paragraph}{}{3}
+\contentsline {paragraph}{Algorytm}{4}
+\contentsline {subsection}{\numberline {2.3}Sprawdzanie, czy wielok\IeC {\k a}t jest prosty}{5}
+\contentsline {paragraph}{}{5}
+\contentsline {paragraph}{Wielok\IeC {\k a}t prosty:}{5}
+\contentsline {paragraph}{Algorytm}{5}
+\contentsline {section}{\numberline {3}Analiza poprawno\IeC {\'s}ci}{6}
+\contentsline {subsection}{\numberline {3.1}Pole wielok\IeC {\k a}ta}{6}
+\contentsline {paragraph}{Poprawno\IeC {\'s}\IeC {\'c}}{6}
+\contentsline {paragraph}{Interpretacja geometryczna}{6}
+\contentsline {paragraph}{Z\IeC {\l }o\IeC {\.z}ono\IeC {\'s}\IeC {\'c} czasowa}{6}
+\contentsline {subsection}{\numberline {3.2}Zawieranie punktu w wielok\IeC {\k a}cie}{6}
+\contentsline {subsection}{\numberline {3.3}Sprawdzanie, czy wielok\IeC {\k a}t jest prosty}{6}
+\contentsline {paragraph}{Z\IeC {\l }o\IeC {\.z}ono\IeC {\'s}\IeC {\'c} czasowa}{6}
+\contentsline {section}{\numberline {4}Opis wej\IeC {\'s}cia/wyj\IeC {\'s}cia}{6}
+\contentsline {subsection}{\numberline {4.1}Wej\IeC {\'s}cie}{6}
+\contentsline {paragraph}{}{6}
+\contentsline {paragraph}{Przyk\IeC {\l }adowe wej\IeC {\'s}cie}{6}
+\contentsline {subsection}{\numberline {4.2}Wyj\IeC {\'s}cie}{7}
+\contentsline {paragraph}{}{7}
+\contentsline {paragraph}{Przyk\IeC {\l }adowe wyj\IeC {\'s}cie}{7}
