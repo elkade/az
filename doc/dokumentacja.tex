@@ -45,22 +45,25 @@ W celu obliczenia pola powierzchni wielokąta prostego stosujemy algorytm wykorz
 \item dla \(i=1\) do \(n\) wykonaj: %dla każdego elementu \((x_i,y_i)\) z \(A\) wykonaj:
 \item \tab{\(area = area + (x_j+x_i)*(y_j-y_i)\)}
 \item \tab{\(j=i\)}
-\item \(area = area/2\)
+\item \(area = |area/2|\)
 \item RETURN \(area\)
 \end{enumerate}
+
+\paragraph{Interpretacja geometryczna} \mbox{}\\
+Sumę we wzorze na pole wielokąta można interpretować jako sumę pól trapezów, z których niektóre pola wzięte są ze znakiem dodatnim, a inne z ujemnym. Zostało to zilustrowane na rysunku \ref{fig:trapez}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{trapez.png}
+    \caption{Interpretacja geometryczna wzoru Gaussa na pole wielokąta}
+    \label{fig:trapez}
+\end{figure}
 
 \subsection{Zawieranie punktu w wielokącie}
 
 \paragraph{}
 Sprawdzenie, czy punkt zawiera się w wielokącie jest realizowane przez zliczenie przecięć półprostej zaczynającej się w badanym punkcie z bokami wielokąta. Jeżeli liczba przecięć jest nieparzysta, to znaczy, że punkt leży wewnątrz wielokąta. W przeciwnym razie punkt leży na zewnątrz wielokąta.
 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=10cm]{zawieranie.png}
-    \caption{Sprawdzanie zawierania się punktu w wielokącie}
-    \label{fig:zawieranie}
-\end{figure}
 
 W zaimplementowanym algorytmie półprosta prowadzona jest równolegle do osi X w kierunku rosnących wartości. Oznaczmy przez \(x_i, y_i\ dla\ i=1...n\) współrzędne kolejnych wierzchołków wielokąta, a przez \(X\) i \(Y\) współrzędne badanego punktu.
 
@@ -73,15 +76,22 @@ W zaimplementowanym algorytmie półprosta prowadzona jest równolegle do osi X 
 \item \tab \tab jeżeli tak, to inside = !inside
 \end{enumerate}
 
-Sprawdzenie z punktu 3. realizowane jest w następujący sposób - sprawdzane jest, czy współrzędne \(y\) obydwu końców krawędzi leżą na różnych półpłaszczyznach wyznaczanych przez prostą - warunek:
+Sprawdzenie z punktu 3. realizowane jest w następujący sposób - sprawdzane jest, czy współrzędne \(y\) obydwu końców krawędzi leżą na różnych półpłaszczyznach wyznaczanych przez prostą \(y=Y\) - warunek:
 
 $$(y_i > Y) != (y_{i+1} > Y)$$
 
-Sprawdzenie z punktu 4. realizowane jest przez znalezienie punktu przecięcia krawędzi z prostą i porównanie go do wartości \(X\):
+Sprawdzenie z punktu 4. realizowane jest przez znalezienie punktu przecięcia krawędzi z prostą \(y=Y\) i porównanie go do wartości \(X\):
 
 $$X < x_i + (x_j - x_i)\frac{y_i - Y}{y_i - y_j}$$
 
 Przykład zasady obliczania punktu przecięcia został przedstawiony na rysunku \ref{fig:przeciecie}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{zawieranie.png}
+    \caption{Sprawdzanie zawierania się punktu w wielokącie}
+    \label{fig:zawieranie}
+\end{figure}
 
 \begin{figure}[H]
     \centering
@@ -91,7 +101,7 @@ Przykład zasady obliczania punktu przecięcia został przedstawiony na rysunku 
 \end{figure}
 
 \subsection{Sprawdzanie, czy wielokąt jest prosty}
-\paragraph{}Algorytmy prezentowane w niniejszym mają zastosowanie jedynie, gdy dany wielokąt jest prosty.
+\paragraph{}Algorytmy prezentowane w niniejszym opracowaniu mają zastosowanie jedynie, gdy dany wielokąt jest prosty.
 \paragraph{Wielokąt prosty:} wielokąt, którego boki tworzą zamkniętą łamaną, a dwa jego boki mają punkt wspólny tylko, gdy są sąsiadami. (Wikipedia)
 \paragraph{Algorytm}\mbox{}\\
 W celu sprawdzenia, czy wielokąt jest prosty dokonujemy sprawdzenia:
@@ -100,14 +110,15 @@ W celu sprawdzenia, czy wielokąt jest prosty dokonujemy sprawdzenia:
 \item W przypadku $|i-j|=1$ (kolejne krawędzie wielokąta): czy jedna z krawędzi zawiera się w drugiej.
 \end{enumerate}
 Algorytm działa na zasadzie sprawdzenia każdej możliwej pary krawędzi $e_i,\ e_j\ dla\ j>i, i,j=1,...,n+1$. Jeżeli dla danej pary spełniony jest dowolny z warunków (1,2), wielokąt nie jest prosty.
+
+
+
 \section{Analiza poprawności}
 
 \subsection{Pole wielokąta}
 \paragraph{Poprawność} \mbox{}\\
-W pierwszej iteracji pętli z kroku 3. \(area = (x_n+x_1)*(y_n-y_1) (=(x_n+x_{n+1})*(y_n-y_{n+1}))\). W kolejnych iteracjach \(j\) jest zawsze o \(1\) mniejsze od \(i\), stąd do \(area\) dodawana jest wartość \((x_j+x_{j+1})*(y_j-y_{j+1})\ dla\ j = 1...n-1\). Stąd ostatecznie \(area = (x_n+x_{n+1})*(y_n-y_{n+1}) + (x_1+x_2)*(y_1-y_2) + ... + (x_{n-1}+x_n)*(y_{n-1}-y_{n}) = \sum\limits_{i=1}^n (x_i+x_{i+1})*(y_{i+1}-y_i)\). Po podzieleniu \(area\) przez \(2\) otrzymujemy wzór Gaussa na pole powierzchni wielokąta.
+W pierwszej iteracji pętli z kroku 3. \(area = (x_n+x_1)*(y_n-y_1) (=(x_n+x_{n+1})*(y_n-y_{n+1}))\). W kolejnych iteracjach \(j\) jest zawsze o \(1\) mniejsze od \(i\), stąd do \(area\) dodawana jest wartość \((x_j+x_{j+1})*(y_j-y_{j+1})\ dla\ j = 1...n-1\). Stąd ostatecznie \(area = (x_n+x_{n+1})*(y_n-y_{n+1}) + (x_1+x_2)*(y_1-y_2) + ... + (x_{n-1}+x_n)*(y_{n-1}-y_{n}) = \sum\limits_{i=1}^n (x_i+x_{i+1})*(y_{i+1}-y_i)\). Po podzieleniu \(area\) przez \(2\) i wzięciu wartości bezwzględnej otrzymujemy wzór Gaussa na pole powierzchni wielokąta.
 
-\paragraph{Interpretacja geometryczna} \mbox{}\\
-Sumę we wzorze na pole wielokąta można interpretować jako sumę pól trapezów. Zostało to zilustrowane na rysunku \ref{fig:trapez}.
 
 \paragraph{Złożoność czasowa} \mbox{}\\
 Algorytm działa w czasie \(O(n)\), gdyż główna pętla algorytmu wykonuje dokładnie \(n\) kroków.
@@ -116,6 +127,9 @@ Algorytm działa w czasie \(O(n)\), gdyż główna pętla algorytmu wykonuje dok
 
 
 \subsection{Sprawdzanie, czy wielokąt jest prosty}
+
+\paragraph{Poprawność} \mbox{}\\
+Algorytm sprawdza pod katem przecięć wszystkie możliwe pary krawędzi, więc daje odpowiedź na pytanie, czy żadne dwie z nich nie przecinają się.
 
 \paragraph{Złożoność czasowa} \mbox{}\\
 Algorytm działa w czasie $O(n^2)$, gdyż dla krawędzi i wykonuje sprawdzenie warunków $n-i$ razy. Liczba wywołań funkcji sprawdzenia warunków $S = \sum\limits_{i=1}^n (n-i) = \frac{n(n-1)}{2}$
