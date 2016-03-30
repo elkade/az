@@ -123,7 +123,18 @@ W pierwszej iteracji pętli z kroku 3. \(area = (x_n+x_1)*(y_n-y_1) (=(x_n+x_{n+
 \paragraph{Złożoność czasowa} \mbox{}\\
 Algorytm działa w czasie \(O(n)\), gdyż główna pętla algorytmu wykonuje dokładnie \(n\) kroków.
 
+
 \subsection{Zawieranie punktu w wielokącie}
+
+\paragraph{Poprawność} \mbox{}\\
+Każde przecięcie z krawędzą wielokąta podążając od badanego punktu wzdłuż półprostej można traktować jako zmianę położenia z \emph{wewnątrz} na \emph{na zewnątrz} wielokąta lub odwrotnie.
+
+Jeżeli badany punkt leży na zewnątrz wielokąta, to podążając wzdłuż półprostej za każdym razem gdy znajdziemy się wewnątrz wielokąta, musi nastąpić moment wyjścia z powrotem na zewnątrz (ponieważ wielokąt ma skończone rozmiary). W związku z tym liczba przecięć z krawędziami wielokąta musi być \textbf{parzysta}.
+
+Z kolei jeśli punkt leży wewnątrz wielokąta, to podązając wzdłuż półprostej co najmniej raz musi nastąpić wyjście na zewnątrz. Po każdym ewentualnym wejściu do wewnątrz nastąpi kolejne wyjście na zewnątrz, więc liczba przecięć półprostej z bokami wielokąta musi być \textbf{nieparzysta}.
+
+\paragraph{Złożoność czasowa} \mbox{}\\
+Algorytm wykonuje $n$ iteracji pętli (pętla po wszystkich krawędziach). W każdej iteracji sprawdzane jest przecięcie z prostą $y = Y$ (realizowane w czasie liniowym) oraz ewentualne położenie punktu przecięcia względem $X$ (również w czasie liniowym) - opisy sprawdzeń przy opisie algorytmu. W związku z tym złożoność czasowa algorytmu wynosi $O(n) * O(1) * O(1) = O(n)$.
 
 
 \subsection{Sprawdzanie, czy wielokąt jest prosty}
