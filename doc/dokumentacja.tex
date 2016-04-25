@@ -104,12 +104,33 @@ Przykład zasady obliczania punktu przecięcia został przedstawiony na rysunku 
 \paragraph{}Algorytmy prezentowane w niniejszym opracowaniu mają zastosowanie jedynie, gdy dany wielokąt jest prosty.
 \paragraph{Wielokąt prosty:} wielokąt, którego boki tworzą zamkniętą łamaną, a dwa jego boki mają punkt wspólny tylko, gdy są sąsiadami. (Wikipedia)
 \paragraph{Algorytm}\mbox{}\\
-W celu sprawdzenia, czy wielokąt jest prosty dokonujemy sprawdzenia:
+Sprawdzenie, czy wielokąt jest prosty odbywa się przy użyciu algorytmu Shamosa - Hoeya, który jest odmianą algorytmu znajdywania wszystkich punktów przecięcia zbioru odcinków - algorytmu Bentleya - Ottmanna. Pomysł na algorytm opiera się na scanlinii przecinającej odcinki wielokąta. Scanlinia "porusza się" wzdłuż osi $x$, jest równoległa do osi $y$ i utrzymuje kolejność punktów przecięcia ze wszystkimi aktualnie przecinanymi odcinkami posortowaną po współczędnej $y$. Przecięcia sprawdzane są tylko wśród par boków leżących obok siebie na scanlinii, dzięki czemu liczba sprawdzeń jest minimalna. Można zauważyć, że kolejność odcinków na scanlinii może zmieniać się tylko, gdy scanlinia mija początek odcinka (dodanie odcinka), koniec odcinka (usunięcie odcinka) lub przecięcie odcinków (zamiana odcinków miejscami). W tym przypadku nie trzeba rozważać przecięcia, bo znalezienie jakiegokolwiek przecięcia kończy działanie algorytmu (oznacza, że wielokąt nie jest prosty). Schemat działania algorytmu:
 \begin{enumerate}
-\item czy istnieje przecięcie pomiędzy dowolnymi dwiema krawędziami $e_i$ i $e_j$ dla $|i-j|>1,\ i,j=1,...,n+1$ danego wielokąta. Przyjmujemy, iż $e_1 = e_{n+1},\ n$ - liczba krawędzi wielokąta. 
-\item W przypadku $|i-j|=1$ (kolejne krawędzie wielokąta): czy jedna z krawędzi zawiera się w drugiej.
+    \item Zainicjalizuj kolejkę zdarzeń. Zdarzeniem dla scanlinii jest napotkanie początku lub końca odcinka, w zdarzeniu należy więc zapisać jego typ (początek lub koniec krawędzi) oraz której krawędzi dotyczy. Zdarzenia w kolejce są posortowane według punktów, w których zachodzą, rosnąco względem współrzędnej $x$, w przypadku równości rosnąco względem współrzędnej $y$.
+    
+    \item Zainicjalizuj scanlinię jako pustą
+    
+    \item Dla każdego zdarzenia z kolejki:
+    
+    \item \tab jeśli jest to początek krawędzi, dodaj krawędź do scanlinii i sprawdź, czy przecina się ona ze swoimi sąsiadami (krawędzią bezpośrednio niżej i wyżej na scanlinii), jeśli tak, return $FALSE$
+    
+    \item \tab jeśli jest to koniec krawędzi, to usuń krawędź ze scanlinii, i sprawdź, czy jej wcześniejsi sąsiedzi przecinają się, jeśli tak, return $FALSE$
+    
+    \item return $TRUE$
 \end{enumerate}
-Algorytm działa na zasadzie sprawdzenia każdej możliwej pary krawędzi $e_i,\ e_j\ dla\ j>i, i,j=1,...,n+1$. Jeżeli dla danej pary spełniony jest dowolny z warunków (1,2), wielokąt nie jest prosty.
+
+Przy sprawdzaniu przecięć odcinków potrzebna jest funkcja, która zwraca położenie punktu $P_2$ względem prostej $P_0$ $P_1$. Żeby to określić, należy wyliczyć różnicę iloczynów:
+$$ (P_1.x - P_0.x)*(P_2.y - P_0.y) - (P_2.x - P_0.x)*(P_1.y -  P_0.y) $$
+Wynik dodatni oznacza, że $P2$ leży na lewo od $P0P1$, wynik 0 oznacza, że $P_0$, $P_1$ i $P_2$ są współliniowe, natomiast wynik ujemny oznacza, że $P_2$ leży na prawo od $P_0P_1$.
+
+Wiedząc, że punkty są współliniowe, sprawdzenie, czy $P_2$ leży na odcinku $P_0P_1$ można zrealizować przez sprawdzenie, czy wartości współrzędnych $x$ i $y$ punktu $P_2$ zawierają się między wartościami odpowiednich współrzędnych punktów $P_0$ i $P_1$. 
+
+Sprawdzanie przecięć pomięcdzy parą odcinków odbywa się wg. następującego algorytmu:
+
+\begin{itemize}
+    \item Jeżeli są to sąsiednie odcinki, to sprawdź, czy się nakładają - czy początek odcinka 1, punkt wspólny odcinków i koniec odcinka 2 są współliniowe, a koniec odcinka 2 leży na odcinku 1 lub koniec odcinka 1 leży na odcinku 2 (wg algorytmów podanych wyżej). Jeżeli się nakładają, to wielokąt nie jest prosty.
+    \item W przeciwnym przypadku sprawdź przecinanie się odcinków - czy początek i koniec odcinka 1 leżą po przeciwnych stronach prostej wyznaczanej przez odcinek 2 i czy początek i koniec odcinka 2 leżą po przeciwnych stronach prostej wyznaczanej przez odcinek 1 (wg algorytmu powyżej). Jeżeli oba warunki zachodzą, to odcinki się przecinają i wielokąt nie jest prosty.
+\end{itemize}
 
 
 
@@ -140,10 +161,12 @@ Algorytm wykonuje $n$ iteracji pętli (pętla po wszystkich krawędziach). W ka�
 \subsection{Sprawdzanie, czy wielokąt jest prosty}
 
 \paragraph{Poprawność} \mbox{}\\
-Algorytm sprawdza pod katem przecięć wszystkie możliwe pary krawędzi, więc daje odpowiedź na pytanie, czy żadne dwie z nich nie przecinają się.
+Algorytm sprawdza pod katem przecięć każde dwa odcinki, które znajdą się obok siebie na scanlinii. Łatwo sprawdzić, że zawsze gdy odcinki się przecinają, to bezpośrednio przed przecięciem znajdą się obok siebie na scanlinii, więc ich przecięcie będzie sprawdzone i wykryte.
 
 \paragraph{Złożoność czasowa} \mbox{}\\
-Algorytm działa w czasie $O(n^2)$, gdyż dla krawędzi i wykonuje sprawdzenie warunków $n-i$ razy. Liczba wywołań funkcji sprawdzenia warunków $S = \sum\limits_{i=1}^n (n-i) = \frac{n(n-1)}{2}$
+Inicjalizacja kolejki zdarzeń dla scanlinii wymaga czasu $nlog(n)$, ponieważ trzeba posortować początki i końce odcinków.
+
+Scanlinia może zostać zaimplementowana jako zrównoważone drzewo binarne, dzięki czemu koszt operacji dodawania i usuwania do niej krawędzi jest rzędu $log(n)$. Dla każdego z $2n$ (początek i koniec boku) zdarzeń należy wykonać operację na drzewie i sprawdzenie przecięć. Sprawdzenie realizowane jest w czasie liniowym (wykonuje jedynie kilka operacji mnożenia, odejmowania i porównywania). W związku z tym algorytm działa w czasie $O(nlog(n) + 2nlog(n)) = O(nlog(n))$.
 
 \section{Opis wejścia/wyjścia}
 
