@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AlgorytmyZaawansowane"
         mc:Ignorable="d" Background="Lavender"
-        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+        Title="MainWindow" Loaded="Window_Loaded" SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -15,7 +15,7 @@
             <local:EnumBooleanConverter x:Key="enumBooleanConverter" />
         </Grid.Resources>
         <Canvas Grid.Column="0" Name="paintSurface" MouseDown="Canvas_MouseDown"
-                MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp">
+                MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Width="500" Height="500">
             <Canvas.Background>
                 <SolidColorBrush Color="White" Opacity="1"/>
             </Canvas.Background>

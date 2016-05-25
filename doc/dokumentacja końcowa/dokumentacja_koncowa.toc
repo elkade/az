@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Opis zmian}{3}
+\contentsline {section}{\numberline {2}Instrukcja u\IeC {\.z}ytkownika}{3}
+\contentsline {subsection}{\numberline {2.1}Rysowanie}{3}
+\contentsline {subsection}{\numberline {2.2}Operacje na plikach}{3}
+\contentsline {subsection}{\numberline {2.3}Obliczanie wyniku}{3}
+\contentsline {section}{\numberline {3}Opis test\IeC {\'o}w}{3}
+\contentsline {section}{\numberline {4}Podzia\IeC {\l } prac}{3}
+\contentsline {subsection}{\numberline {4.1}\IeC {\L }ukasz Dragan}{3}
+\contentsline {subsection}{\numberline {4.2}Piotr Izert}{4}
+\contentsline {section}{\numberline {5}Opis wej\IeC {\'s}cia/wyj\IeC {\'s}cia}{4}
+\contentsline {subsection}{\numberline {5.1}Wej\IeC {\'s}cie}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {paragraph}{Przyk\IeC {\l }adowe wej\IeC {\'s}cie}{4}
+\contentsline {subsection}{\numberline {5.2}Wyj\IeC {\'s}cie}{4}
+\contentsline {paragraph}{}{4}
+\contentsline {paragraph}{Przyk\IeC {\l }adowe wyj\IeC {\'s}cie}{4}
