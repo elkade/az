@@ -19,7 +19,7 @@ namespace AlgorytmyZaawansowane
 
         }
 
-        private IEnumerable<Point> _vertices//dodaje pierwszy wierzchołek na koniec, żeby uzyskać ostatnią krawędź
+        public IEnumerable<Point> Vertices//dodaje pierwszy wierzchołek na koniec, żeby uzyskać ostatnią krawędź
         {
             get
             {
@@ -47,32 +47,37 @@ namespace AlgorytmyZaawansowane
 
         public bool IsSimple()
         {
-            if (Count < 3) throw new InvalidOperationException("Too few vertices.");
-            var vertices = _vertices.ToList();
-            for (int i = 1; i < vertices.Count; i++)
+            EdgeEventQueue queue = new EdgeEventQueue(this);
+            ScanLine scanLine = new ScanLine();
+
+            for(EdgeEvent edgeEvent = queue.NextEvent(); edgeEvent != null; edgeEvent = queue.NextEvent())
             {
-                for (int j = i + 1; j < vertices.Count; j++)
+                if(edgeEvent.Side == Side.LEFT)
                 {
-                    var a0 = vertices[i - 1];//początek krawędzi
-                    var ak = vertices[i];//koniec krawędzi
-                    var b0 = vertices[j - 1];
-                    var bk = vertices[j];
-                    if (DoIntersect(a0, ak, b0, bk))
+                    ScanLineSegment segment = scanLine.Add(edgeEvent);
+                    ScanLineSegment above = segment.Above;
+                    ScanLineSegment below = segment.Below;
+                    if (above != null && DoIntersect(segment.StartPoint, segment.EndPoint, above.StartPoint, above.EndPoint))
                     {
-                        if (j == i + 1)
-                        {//sprawdzany krawędź sąsiednią - ak = b0
-                            if (IsBetween(a0, ak, bk) || IsBetween(b0, bk, a0))//dwa kolejne pokrywają się
-                                return false;
-                        }
-                        else if(i == 1 && j == vertices.Count - 1)
-                        {//jeżeli sprawdzany pierwszą i ostatnią krawędź - a0 = bk
-                            if (IsBetween(a0, ak, b0) || IsBetween(b0, bk, ak))
-                                //pierwszy i ostatni pokrywają się
-                                return false;
-                        }
-                        else
-                            return false;
+                        return false;
                     }
+                    if (below != null && DoIntersect(segment.StartPoint, segment.EndPoint, below.StartPoint, below.EndPoint))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    ScanLineSegment segment = scanLine.Find(edgeEvent);
+                    if (segment.Above == null || segment.Below == null)
+                    {
+                        continue;
+                    }
+                    if(DoIntersect(segment.Above.StartPoint, segment.Above.EndPoint, segment.Below.StartPoint, segment.Below.EndPoint))
+                    {
+                        return false;
+                    }
+                    scanLine.Remove(edgeEvent);
                 }
             }
             return true;
@@ -80,7 +85,7 @@ namespace AlgorytmyZaawansowane
 
         public double GetArea()
         {
-            var vertices = _vertices.ToList();
+            var vertices = Vertices.ToList();
             var area = Math.Abs(vertices.Take(vertices.Count - 1)
                .Select((p, i) => (vertices[i + 1].X - p.X) * (vertices[i + 1].Y + p.Y))
                .Sum() /*+ (this[0].X - this[Count-1].X) * (this[0].Y + this[Count - 1].Y)*/) / 2.0;
