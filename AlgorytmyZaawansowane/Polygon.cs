@@ -57,11 +57,11 @@ namespace AlgorytmyZaawansowane
                     ScanLineSegment segment = scanLine.Add(edgeEvent);
                     ScanLineSegment above = segment.Above;
                     ScanLineSegment below = segment.Below;
-                    if (above != null && DoIntersect(segment.StartPoint, segment.EndPoint, above.StartPoint, above.EndPoint))
+                    if (above != null && CheckIntersection(segment.StartPoint, segment.EndPoint, above.StartPoint, above.EndPoint, segment.EdgeIndex, above.EdgeIndex))
                     {
                         return false;
                     }
-                    if (below != null && DoIntersect(segment.StartPoint, segment.EndPoint, below.StartPoint, below.EndPoint))
+                    if (below != null && CheckIntersection(segment.StartPoint, segment.EndPoint, below.StartPoint, below.EndPoint, segment.EdgeIndex, below.EdgeIndex))
                     {
                         return false;
                     }
@@ -69,13 +69,13 @@ namespace AlgorytmyZaawansowane
                 else
                 {
                     ScanLineSegment segment = scanLine.Find(edgeEvent);
-                    if (segment.Above == null || segment.Below == null)
+                    // sprawdz przeciecia, sasiadow, jezeli usuwany fragment mial obydwu
+                    if (segment.Above != null && segment.Below != null)
                     {
-                        continue;
-                    }
-                    if(DoIntersect(segment.Above.StartPoint, segment.Above.EndPoint, segment.Below.StartPoint, segment.Below.EndPoint))
-                    {
-                        return false;
+                        if (CheckIntersection(segment.Above.StartPoint, segment.Above.EndPoint, segment.Below.StartPoint, segment.Below.EndPoint, segment.Above.EdgeIndex, segment.Below.EdgeIndex))
+                        {
+                            return false;
+                        }
                     }
                     scanLine.Remove(edgeEvent);
                 }
@@ -122,6 +122,40 @@ namespace AlgorytmyZaawansowane
 
             return (val > 0) ? 1 : 2; // clock or counterclock wise
         }
+
+        private bool CheckIntersection(Point a0, Point ak, Point b0, Point bk, int i, int j)
+        {
+            if (DoIntersect(a0, ak, b0, bk))
+            {
+                if (j == i + 1 || i == j + 1 || i == 0 && j == Vertices.ToList().Count - 2 || j == 0 && i == Vertices.ToList().Count - 2)
+                {//sprawdzany krawędź sąsiednią lub sprawdzany pierwszą i ostatnią krawędź
+                    if (a0.Equals(b0))
+                    {
+                        if (IsBetween(a0, ak, bk) || IsBetween(b0, bk, ak))
+                            return true;
+                    }
+                    if(a0.Equals(bk))
+                    {
+                        if (IsBetween(a0, ak, b0) || IsBetween(b0, bk, ak))
+                            return true;
+                    }
+                    if(ak.Equals(b0))
+                    {
+                        if (IsBetween(a0, ak, bk) || IsBetween(b0, bk, a0))
+                            return true;
+                    }
+                    if (ak.Equals(bk))
+                    {
+                        if (IsBetween(a0, ak, b0) || IsBetween(b0, bk, a0))
+                            return true;
+                    }
+                }
+                else
+                    return true;
+            }
+            return false;
+        }
+
 
         // The main function that returns true if line segment 'p1q1'
         // and 'p2q2' intersect.

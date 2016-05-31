@@ -34,16 +34,24 @@ namespace AlgorytmyZaawansowane
                     lastVertex = vertex;
                     continue;
                 }
+                EdgeEvent left, right;
+
                 if (IsAfter((Point)lastVertex, vertex) > 0)
                 {
-                    events[2 * arrayIndex] = new EdgeEvent(vertex, Side.LEFT);
-                    events[2 * arrayIndex + 1] = new EdgeEvent((Point)lastVertex, Side.RIGHT);
+                    left = new EdgeEvent(vertex, Side.LEFT, arrayIndex);
+                    right = new EdgeEvent((Point)lastVertex, Side.RIGHT, arrayIndex);
                 }
                 else
                 {
-                    events[2 * arrayIndex] = new EdgeEvent((Point)lastVertex, Side.LEFT);
-                    events[2 * arrayIndex + 1] = new EdgeEvent(vertex, Side.RIGHT);
+                    left = new EdgeEvent((Point)lastVertex, Side.LEFT, arrayIndex);
+                    right = new EdgeEvent(vertex, Side.RIGHT, arrayIndex);
                 }
+                left.OtherEnd = right;
+                right.OtherEnd = left;
+
+                events[2 * arrayIndex] = left;
+                events[2 * arrayIndex + 1] = right;
+
                 lastVertex = vertex;
                 arrayIndex++;
             }
@@ -55,11 +63,13 @@ namespace AlgorytmyZaawansowane
                 {
                     return after;
                 }
-                if(e1.Side == e2.Side)
+                // ten sam punkt - sprawdzenie koniec/początek
+                if (e1.Side == e2.Side)
                 {
+                    // nie powinno tak być raczej
                     return 0;
                 }
-                if (e1.Side == Side.RIGHT)
+                if (e1.Side == Side.LEFT)
                 {
                     return 1;
                 }
